@@ -1,8 +1,11 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { MessageService } from 'src/message/message.service';
+import { CreateMessageDto } from 'src/message/message.dto';
 
 @WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+    constructor(private readonly messageService: MessageService) {}
 
     @WebSocketServer() server;
     users = 0;
@@ -14,7 +17,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         // Notify connected clients of current users
         this.server.emit('users', this.users);
-        console.log(this.users);
 
     }
 
@@ -35,6 +37,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit('new-message', message);
         //client.broadcast.emit('chat', message);
         //return {event: 'chat',data: message};
+        //* test
+        let createMessageDto: CreateMessageDto ={
+            text: message,
+            client: 'shiba',
+            chatId: 1
+        };
+        //*/
+        this.messageService.addMessage(createMessageDto);
     }
 
 }
