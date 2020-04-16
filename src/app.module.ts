@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ require('dotenv').config();
           synchronize: true,
           charset: 'utf8mb4_general_ci',
         }),
-      }),
+      }), UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
