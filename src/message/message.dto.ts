@@ -1,6 +1,8 @@
+import { User } from "../entities/user.entity";
+
 export class CreateMessageDto {
     text: string;
-    client: string;
+    client: User;
     createdTime?: Date;
     chatId: number;
 }

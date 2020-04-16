@@ -2,6 +2,7 @@ import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnectio
 import { Socket } from 'socket.io';
 import { MessageService } from 'src/message/message.service';
 import { CreateMessageDto } from 'src/message/message.dto';
+import { User } from 'src/entities/user.entity';
 
 @WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -40,7 +41,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         //* test
         let createMessageDto: CreateMessageDto ={
             text: message,
-            client: 'shiba',
+            client: {userId: 1, userName: 'shiba', createdTime: new Date(), messages:[]},
             chatId: 1
         };
         //*/
