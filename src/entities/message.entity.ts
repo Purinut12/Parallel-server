@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -11,8 +11,9 @@ export class Message {
 
     @ManyToOne(
         type => User,
-        user => user.messages
+        client => client.messages,
     )
+    @JoinColumn({ name: 'clientId' })
     client: User;
 
     @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
