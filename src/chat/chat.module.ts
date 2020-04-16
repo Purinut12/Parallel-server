@@ -7,13 +7,9 @@ import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
 
 @Module({
-    imports : [
-        TypeOrmModule.forFeature([
-            Message
-        ])
-    ],
-    controllers: [ChatController],
-    providers: [ ChatGateway, MessageService, ChatService ],
-    exports: [ChatService],
+  imports: [TypeOrmModule.forFeature([Message])],
+  controllers: [ChatController],
+  providers: [ChatGateway, MessageService, ChatService],
+  exports: [ChatService],
 })
 export class ChatModule {}

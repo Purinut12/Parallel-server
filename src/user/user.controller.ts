@@ -4,15 +4,15 @@ import { CreateUserDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService:UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-    @Get()
-    async getAllUsers(){
-        return this.userService.getAllUsers();
-    }
+  @Get()
+  async getAllUsers() {
+    return this.userService.getAllUsers();
+  }
 
-    @Post()
-    async createNewUser(@Body() createUserDto: CreateUserDto){
-        return this.userService.createUser(createUserDto);
-    }
+  @Post()
+  async createNewUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
+  }
 }

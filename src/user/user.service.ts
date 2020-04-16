@@ -6,17 +6,17 @@ import { CreateUserDto } from './user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    async getAllUsers(){
-        return this.userRepository.find();
-    }
+  async getAllUsers() {
+    return this.userRepository.find();
+  }
 
-    async createUser(createUserDto: CreateUserDto){
-        createUserDto.createdTime = new Date();
-        return this.userRepository.save(createUserDto);
-    }
+  async createUser(createUserDto: CreateUserDto) {
+    createUserDto.createdTime = new Date();
+    return this.userRepository.save(createUserDto);
+  }
 }
