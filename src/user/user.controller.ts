@@ -11,8 +11,13 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  @Post()
-  async createNewUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  /*@Post()
+    async createNewUser(@Body() createUserDto: CreateUserDto){
+        return this.userService.createUser(createUserDto);
+    }*/
+
+  @Post('login')
+  async login(@Body() createUserDto: CreateUserDto) {
+    return this.userService.login(createUserDto);
   }
 }
