@@ -1,4 +1,4 @@
 export class CreateUserDto {
-    userName: string;
-    createdTime?: Date;
+  userName: string;
+  createdTime?: Date;
 }
