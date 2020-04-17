@@ -15,8 +15,19 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    async createUser(createUserDto: CreateUserDto){
+    /*async createUser(createUserDto: CreateUserDto){
         createUserDto.createdTime = new Date();
         return this.userRepository.save(createUserDto);
+    }*/
+
+    async login(createUserDto: CreateUserDto){
+        let userName = createUserDto.userName;
+        let user = await this.userRepository.findOne({ where: { userName } });
+        if(!user){
+            createUserDto.createdTime = new Date();
+            await this.userRepository.save(createUserDto);
+            user = await this.userRepository.findOne({ where: { userName } });
+        }
+        return user;
     }
 }
