@@ -38,22 +38,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sent-message')
   async onChat(client: Socket, message: string) {
-    console.log(message);
     this.server.emit('new-message', message);
     //client.broadcast.emit('chat', message);
     //return {event: 'chat',data: message};
-    //* test
     let createMessageDto: CreateMessageDto = {
       text: message,
-      client: {
-        userId: 1,
-        userName: 'shiba',
-        createdTime: new Date(),
-        messages: [],
-      },
+      client: 1,
       chatId: 1,
     };
-    //*/
     this.messageService.addMessage(createMessageDto);
   }
 }
