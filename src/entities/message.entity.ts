@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { ChatRoom } from './chatroom.entity';
 
 @Entity()
 export class Message {
@@ -25,6 +26,9 @@ export class Message {
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   createdTime: Date;
 
-  @Column('integer', { nullable: true }) //chat room
-  chatId: number;
+  @ManyToOne(
+    type => ChatRoom,
+    chatRoom => chatRoom.messages
+  )
+  chatRoom: ChatRoom;
 }

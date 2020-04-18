@@ -5,6 +5,9 @@ import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { ChatroomController } from './chatroom/chatroom.controller';
+import { ChatroomService } from './chatroom/chatroom.service';
+import { ChatroomModule } from './chatroom/chatroom.module';
 
 require('dotenv').config();
 
@@ -26,6 +29,7 @@ require('dotenv').config();
       }),
     }),
     UserModule,
+    ChatroomModule,
   ],
   controllers: [AppController],
   providers: [AppService],
