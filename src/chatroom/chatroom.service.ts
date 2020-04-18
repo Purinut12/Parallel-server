@@ -29,6 +29,9 @@ export class ChatroomService {
     let idx = 0;
     let N = chatRoomOfUser.length;
 
+    let allChatRoomUser = await this.chatRoom_UserRepository.find();
+    await allChatRoomUser.sort();
+
     allChatRooms.forEach(chatRoom => {
       let curChatRoomId = -1;
       if (idx < N) curChatRoomId = chatRoomOfUser[idx].chatRoomId;
@@ -37,7 +40,15 @@ export class ChatroomService {
         chatRoomId: chatRoom.chatRoomId,
         chatName: chatRoom.chatName,
         isMember: chatRoom.chatRoomId == curChatRoomId ? true : false,
+        members: [],
       };
+      let members = allChatRoomUser.filter(
+        chatRoom_User => chatRoom_User.chatRoomId == chatRoom.chatRoomId,
+      );
+      members.forEach(chatRoom_User => {
+        tmp.members.push(chatRoom_User.userId);
+      });
+
       resp.push(tmp);
       if (curChatRoomId != -1)
         while (idx < N && chatRoom.chatRoomId >= chatRoomOfUser[idx].chatRoomId)
@@ -62,7 +73,9 @@ export class ChatroomService {
   async joinChatRoom(joinChatRoomDto: joinOrLeaveChatRoomDto) {
     let chatId = joinChatRoomDto.chatId;
     let userId = joinChatRoomDto.userId;
-    let chatRooms = await this.chatRoom_UserRepository.find(chatId);
+    let chatRooms = await this.chatRoom_UserRepository.find({
+      where: { chatRoomId: chatId },
+    });
     let isAlreadyJoined = false;
     chatRooms.forEach(chatRoom => {
       if (chatRoom.userId == userId) isAlreadyJoined = true;
@@ -79,7 +92,9 @@ export class ChatroomService {
   async leaveChatRoom(joinChatRoomDto: joinOrLeaveChatRoomDto) {
     let chatId = joinChatRoomDto.chatId;
     let userId = joinChatRoomDto.userId;
-    let chatRooms = await this.chatRoom_UserRepository.find(chatId);
+    let chatRooms = await this.chatRoom_UserRepository.find({
+      where: { chatRoomId: chatId },
+    });
     let isAlreadyJoined = false;
     chatRooms.forEach(chatRoom => {
       if (chatRoom.userId == userId) isAlreadyJoined = true;
