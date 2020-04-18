@@ -19,8 +19,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly messageService: MessageService,
     private readonly userService: UserService,
-    private readonly chatRoomService: ChatroomService
-    ) {}
+    private readonly chatRoomService: ChatroomService,
+  ) {}
 
   @WebSocketServer() server;
   users = 0;
@@ -59,11 +59,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let user = await this.userService.getUserByUserId(userId);
 
-    let newMessageDto:NewMessageDto = {
+    let newMessageDto: NewMessageDto = {
       text: message,
       createdTime: resp.generatedMaps[0].createdTime,
-      userName: user.userName
-    }
+      userName: user.userName,
+    };
     this.server.emit('new-message', newMessageDto);
   }
 
@@ -75,20 +75,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.join(chatName);
     //socket.to(chatName).emit('roomCreated', {room: chatName});
     //return { event: 'roomCreated', room: 'aRoom' };
-    
 
     let createChatRoomDto: CreateChatRoomDto = {
-      chatName:chatName,
-      user:userId,
-    }
+      chatName: chatName,
+      user: userId,
+    };
     let resp = await this.chatRoomService.createChatRoom(createChatRoomDto);
 
     let newGroupDto: NewGroupDto = {
-      chatName:chatName,
-      chatRoom:resp.identifiers[0].chatRoomId,
-      member:[userId],
-    }
-    this.server.emit('new-group',newGroupDto);
+      chatName: chatName,
+      chatRoom: resp.identifiers[0].chatRoomId,
+      member: [userId],
+    };
+    this.server.emit('new-group', newGroupDto);
   }
 
   @SubscribeMessage('join-group')
@@ -102,16 +101,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let newJoinGroupDto: NewJoinGroupDto = {
       userName: user.userName,
-      joinedTime: new Date() // To be edit *********************************************************************
-    }
-    
-    console.log(user.userName,"has join",chatRoomId);
+      joinedTime: new Date(), // To be edit *********************************************************************
+    };
+
+    console.log(user.userName, 'has join', chatRoomId);
 
     this.server.to(chatRoomId).emit('new-member', newJoinGroupDto);
   }
 
   @SubscribeMessage('test')
-  async test(){
-    this.server.to('group111').emit("test2","hello");
+  async test() {
+    this.server.to('group111').emit('test2', 'hello');
   }
 }

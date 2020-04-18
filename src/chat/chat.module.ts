@@ -13,7 +13,13 @@ import { ChatRoom, ChatRoom_User } from 'src/entities/chatroom.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Message, User, ChatRoom, ChatRoom_User])],
   controllers: [ChatController],
-  providers: [ChatGateway, MessageService, ChatService, UserService, ChatroomService],
+  providers: [
+    ChatGateway,
+    MessageService,
+    ChatService,
+    UserService,
+    ChatroomService,
+  ],
   exports: [ChatService],
 })
 export class ChatModule {}
