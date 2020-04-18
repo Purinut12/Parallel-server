@@ -31,4 +31,5 @@ export class Message {
     chatRoom => chatRoom.messages,
   )
   chatRoom: ChatRoom;
+  
 }

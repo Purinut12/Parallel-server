@@ -1,0 +1,11 @@
+export class NewMessageDto{
+    text: string;
+    userName: string;
+    createdTime: Date;
+}
+
+export class  NewGroupDto{
+    chatName: string;
+    chatRoom: number;
+    member: number[];
+}

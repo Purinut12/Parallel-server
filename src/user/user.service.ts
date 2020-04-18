@@ -30,4 +30,8 @@ export class UserService {
     }
     return user;
   }
+
+  async getUserByUserId(userId: number) {
+    return this.userRepository.findOne(userId);
+  }
 }

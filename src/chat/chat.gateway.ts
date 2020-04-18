@@ -9,10 +9,18 @@ import { Socket } from 'socket.io';
 import { MessageService } from 'src/message/message.service';
 import { CreateMessageDto } from 'src/message/message.dto';
 import { User } from 'src/entities/user.entity';
+import { NewMessageDto, NewGroupDto } from './chat.dto';
+import { UserService } from 'src/user/user.service';
+import { ChatroomService } from 'src/chatroom/chatroom.service';
+import { CreateChatRoomDto } from 'src/chatroom/chatroom.dto';
 
 @WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly userService: UserService,
+    private readonly chatRoomService: ChatroomService
+    ) {}
 
   @WebSocketServer() server;
   users = 0;
@@ -37,15 +45,55 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('sent-message')
-  async onChat(client: Socket, message: string) {
-    this.server.emit('new-message', message);
-    //client.broadcast.emit('chat', message);
-    //return {event: 'chat',data: message};
+  async onChat(client: Socket, data: any) {
+    let message = data.text;
+    let userId = data.client;
+    let chatRoomId = data.chatRoom;
+
     let createMessageDto: CreateMessageDto = {
       text: message,
-      client: 1,
-      chatId: 1,
+      client: userId,
+      chatRoom: chatRoomId,
     };
-    this.messageService.addMessage(createMessageDto);
+    let resp = await this.messageService.addMessage(createMessageDto);
+
+    let user = await this.userService.getUserByUserId(userId);
+
+    let newMessageDto:NewMessageDto = {
+      text: message,
+      createdTime: resp.generatedMaps[0].createdTime,
+      userName: user.userName
+    }
+    this.server.emit('new-message', newMessageDto);
+  }
+
+  @SubscribeMessage('create-group')
+  async createRoom(socket: Socket, data: any) {
+    let chatName = data.chatName;
+    let userId = data.client;
+
+    socket.join(chatName);
+    //socket.to(chatName).emit('roomCreated', {room: chatName});
+    //return { event: 'roomCreated', room: 'aRoom' };
+
+    let createChatRoomDto: CreateChatRoomDto = {
+      chatName:chatName,
+      user:userId,
+    }
+    let resp = await this.chatRoomService.createChatRoom(createChatRoomDto);
+
+    let newGroupDto: NewGroupDto = {
+      chatName:chatName,
+      chatRoom:resp.identifiers[0].chatRoomId,
+      member:[userId],
+    }
+    this.server.emit('new-group',newGroupDto)
+  }
+
+  @SubscribeMessage('join-room')
+  async joinRoom(socket: Socket, data: string) {
+    socket.join('aRoom');
+    socket.to('aRoom').emit('shiba', {room: 'aRoom'});
+    return { event: 'roomCreated', room: 'aRoom' };
   }
 }
