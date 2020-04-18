@@ -28,7 +28,7 @@ export class Message {
 
   @ManyToOne(
     type => ChatRoom,
-    chatRoom => chatRoom.messages
+    chatRoom => chatRoom.messages,
   )
   chatRoom: ChatRoom;
 }

@@ -5,25 +5,25 @@ import { CreateChatRoomDto, joinOrLeaveChatRoomDto } from './chatroom.dto';
 
 @Controller('chatroom')
 export class ChatroomController {
-    constructor(private readonly chatRoomService: ChatroomService) {}
+  constructor(private readonly chatRoomService: ChatroomService) {}
 
-    @Get(':userId')
-    async getChatRoom(@Param('userId') userId: User) {
-        return this.chatRoomService.getChatRoom(userId);
-    }
+  @Get(':userId')
+  async getChatRoom(@Param('userId') userId: User) {
+    return this.chatRoomService.getChatRoom(userId);
+  }
 
-    @Post()
-    async createChatRoom(@Body() createChatRoomDto: CreateChatRoomDto){
-        return this.chatRoomService.createChatRoom(createChatRoomDto);
-    }
+  @Post()
+  async createChatRoom(@Body() createChatRoomDto: CreateChatRoomDto) {
+    return this.chatRoomService.createChatRoom(createChatRoomDto);
+  }
 
-    @Patch('/join')
-    async joinChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto){
-        return this.chatRoomService.joinChatRoom(joinChatRoomDto);
-    }
+  @Patch('/join')
+  async joinChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto) {
+    return this.chatRoomService.joinChatRoom(joinChatRoomDto);
+  }
 
-    @Patch('/leave')
-    async leaveChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto){
-        return this.chatRoomService.leaveChatRoom(joinChatRoomDto);
-    }
+  @Patch('/leave')
+  async leaveChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto) {
+    return this.chatRoomService.leaveChatRoom(joinChatRoomDto);
+  }
 }
