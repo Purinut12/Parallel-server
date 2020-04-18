@@ -9,3 +9,8 @@ export class  NewGroupDto{
     chatRoom: number;
     member: number[];
 }
+
+export class NewJoinGroupDto{
+    userName: string;
+    joinedTime: Date;
+}

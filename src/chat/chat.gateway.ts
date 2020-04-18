@@ -9,7 +9,7 @@ import { Socket } from 'socket.io';
 import { MessageService } from 'src/message/message.service';
 import { CreateMessageDto } from 'src/message/message.dto';
 import { User } from 'src/entities/user.entity';
-import { NewMessageDto, NewGroupDto } from './chat.dto';
+import { NewMessageDto, NewGroupDto, NewJoinGroupDto } from './chat.dto';
 import { UserService } from 'src/user/user.service';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { CreateChatRoomDto } from 'src/chatroom/chatroom.dto';
@@ -75,6 +75,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.join(chatName);
     //socket.to(chatName).emit('roomCreated', {room: chatName});
     //return { event: 'roomCreated', room: 'aRoom' };
+    
 
     let createChatRoomDto: CreateChatRoomDto = {
       chatName:chatName,
@@ -87,13 +88,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       chatRoom:resp.identifiers[0].chatRoomId,
       member:[userId],
     }
-    this.server.emit('new-group',newGroupDto)
+    this.server.emit('new-group',newGroupDto);
   }
 
-  @SubscribeMessage('join-room')
-  async joinRoom(socket: Socket, data: string) {
-    socket.join('aRoom');
-    socket.to('aRoom').emit('shiba', {room: 'aRoom'});
-    return { event: 'roomCreated', room: 'aRoom' };
+  @SubscribeMessage('join-group')
+  async joinRoom(socket: Socket, data: any) {
+    let chatRoomId = data.chatRoom;
+    let userId = data.client;
+
+    socket.join(chatRoomId);
+
+    let user = await this.userService.getUserByUserId(userId);
+
+    let newJoinGroupDto: NewJoinGroupDto = {
+      userName: user.userName,
+      joinedTime: new Date() // To be edit *********************************************************************
+    }
+    
+    console.log(user.userName,"has join",chatRoomId);
+
+    this.server.to(chatRoomId).emit('new-member', newJoinGroupDto);
+  }
+
+  @SubscribeMessage('test')
+  async test(){
+    this.server.to('group111').emit("test2","hello");
   }
 }

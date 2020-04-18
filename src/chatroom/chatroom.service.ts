@@ -107,4 +107,8 @@ export class ChatroomService {
     }
     throw new BadRequestException('User is not in this chat room');
   }
+
+  async getChatRoombyChatRoomId(chatRoomId: number): Promise<ChatRoom>{
+    return this.chatRoomRepository.findOne(chatRoomId);
+  }
 }
