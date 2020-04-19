@@ -66,7 +66,7 @@ export class ChatroomService {
     let resp2 = await this.chatRoom_UserRepository.insert({
       chatRoomId: resp.identifiers[0].chatRoomId,
       userId: createChatRoomDto.user,
-      chatName: createChatRoomDto.chatName
+      chatName: createChatRoomDto.chatName,
     });
     return resp;
   }
@@ -86,7 +86,7 @@ export class ChatroomService {
       return this.chatRoom_UserRepository.insert({
         chatRoomId: chatId,
         userId: userId,
-        chatName: chatRoom.chatName
+        chatName: chatRoom.chatName,
       });
     }
     throw new BadRequestException('Already joined this chat room');
@@ -117,7 +117,7 @@ export class ChatroomService {
 
   async getChatRoomByUserId(userId: number): Promise<ChatRoom_User[]> {
     return this.chatRoom_UserRepository.find({
-      where: {userId: userId}
+      where: { userId: userId },
     });
   }
 }

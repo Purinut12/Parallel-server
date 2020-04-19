@@ -19,7 +19,7 @@ export class MessageService {
 
   async addMessage(createMessageDto: CreateMessageDto) {
     createMessageDto.createdTime = new Date();
-    if(!createMessageDto.type) createMessageDto.type = 0;
+    if (!createMessageDto.type) createMessageDto.type = 0;
     return this.messageRepository.insert(createMessageDto);
   }
 }

@@ -12,7 +12,10 @@ import { User } from 'src/entities/user.entity';
 import { NewMessageDto, NewGroupDto, NewJoinGroupDto } from './chat.dto';
 import { UserService } from 'src/user/user.service';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
-import { CreateChatRoomDto, JoinOrLeaveChatRoomDto } from 'src/chatroom/chatroom.dto';
+import {
+  CreateChatRoomDto,
+  JoinOrLeaveChatRoomDto,
+} from 'src/chatroom/chatroom.dto';
 
 @WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -54,13 +57,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       text: message,
       client: userId,
       chatRoom: chatRoomId,
-      type: 0
+      type: 0,
     };
     let resp = await this.messageService.addMessage(createMessageDto);
 
     let user = await this.userService.getUserByUserId(userId);
 
-    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(chatRoomId);
+    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(
+      chatRoomId,
+    );
 
     let newMessageDto: NewMessageDto = {
       text: message,
@@ -100,27 +105,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let user = await this.userService.getUserByUserId(userId);
 
-
     let createMessageDto: CreateMessageDto = {
-      text: user.userName+" has joined",
+      text: user.userName + ' has joined',
       client: userId,
       chatRoom: chatRoomId,
-      type: 1
+      type: 1,
     };
 
     let joinOrLeaveChatRoomDto: JoinOrLeaveChatRoomDto = {
       chatId: chatRoomId,
-      userId: userId
-    }
-    let respJoin = await this.chatRoomService.joinChatRoom(joinOrLeaveChatRoomDto);
+      userId: userId,
+    };
+    let respJoin = await this.chatRoomService.joinChatRoom(
+      joinOrLeaveChatRoomDto,
+    );
 
     let respMessage = await this.messageService.addMessage(createMessageDto);
 
-    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(chatRoomId);
+    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(
+      chatRoomId,
+    );
 
     socket.join(chatRoom.chatName);
-
-    
 
     let newJoinGroupDto: NewJoinGroupDto = {
       userName: user.userName,
@@ -133,20 +139,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('login')
-  async login(socket: Socket,{userName}: any){
+  async login(socket: Socket, { userName }: any) {
     let user = await this.userService.getUserByUserName(userName);
-    let chatRoom_User = await this.chatRoomService.getChatRoomByUserId(user.userId);
+    let chatRoom_User = await this.chatRoomService.getChatRoomByUserId(
+      user.userId,
+    );
 
     chatRoom_User.forEach(chatRoom => {
-      console.log(socket.id,chatRoom.chatName);
-      socket.join(chatRoom.chatName)
+      console.log(socket.id, chatRoom.chatName);
+      socket.join(chatRoom.chatName);
     });
-    console.log(userName,"login");
+    console.log(userName, 'login');
   }
 
   @SubscribeMessage('test')
   async test(socket: Socket) {
     console.log(socket.id);
-    this.server.to("dog").emit('test2', 'wanwan');
+    this.server.to('dog').emit('test2', 'wanwan');
   }
 }
