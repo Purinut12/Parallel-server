@@ -54,6 +54,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       text: message,
       client: userId,
       chatRoom: chatRoomId,
+      type: 0
     };
     let resp = await this.messageService.addMessage(createMessageDto);
 
@@ -98,6 +99,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.join(chatRoomId);
 
     let user = await this.userService.getUserByUserId(userId);
+
+    let resp = await this.messageService.addMessage();
 
     let newJoinGroupDto: NewJoinGroupDto = {
       userName: user.userName,
