@@ -60,7 +60,12 @@ export class ChatroomService {
   async createChatRoom(createChatRoomDto: CreateChatRoomDto) {
     createChatRoomDto.messages = [];
     createChatRoomDto.members = [createChatRoomDto.user];
-    console.log(createChatRoomDto);
+
+    let chatRoom = await this.getChatRoombyChatName(createChatRoomDto.chatName);
+    if (chatRoom)
+      throw new BadRequestException(
+        'Already have chat room name ' + createChatRoomDto.chatName,
+      );
 
     let resp = await this.chatRoomRepository.insert(createChatRoomDto);
     let resp2 = await this.chatRoom_UserRepository.insert({
@@ -118,6 +123,12 @@ export class ChatroomService {
   async getChatRoomByUserId(userId: number): Promise<ChatRoom_User[]> {
     return this.chatRoom_UserRepository.find({
       where: { userId: userId },
+    });
+  }
+
+  async getChatRoombyChatName(chatName: string) {
+    return this.chatRoomRepository.findOne({
+      where: { chatName: chatName },
     });
   }
 }
