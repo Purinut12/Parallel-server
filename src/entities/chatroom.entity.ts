@@ -42,4 +42,7 @@ export class ChatRoom_User {
     */
   @PrimaryColumn('integer')
   userId: number;
+
+  @Column('varchar', { length: 50 })
+  chatName: string;
 }

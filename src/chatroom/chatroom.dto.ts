@@ -8,7 +8,7 @@ export class CreateChatRoomDto {
   members?: User[];
 }
 
-export class joinOrLeaveChatRoomDto {
+export class JoinOrLeaveChatRoomDto {
   chatId: any;
   userId: any;
 }

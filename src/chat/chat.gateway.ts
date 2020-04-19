@@ -12,7 +12,7 @@ import { User } from 'src/entities/user.entity';
 import { NewMessageDto, NewGroupDto, NewJoinGroupDto } from './chat.dto';
 import { UserService } from 'src/user/user.service';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
-import { CreateChatRoomDto } from 'src/chatroom/chatroom.dto';
+import { CreateChatRoomDto, JoinOrLeaveChatRoomDto } from 'src/chatroom/chatroom.dto';
 
 @WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -60,12 +60,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let user = await this.userService.getUserByUserId(userId);
 
+    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(chatRoomId);
+
     let newMessageDto: NewMessageDto = {
       text: message,
       createdTime: resp.generatedMaps[0].createdTime,
       userName: user.userName,
     };
-    this.server.emit('new-message', newMessageDto);
+    this.server.to(chatRoom.chatName).emit('new-message', newMessageDto);
   }
 
   @SubscribeMessage('create-group')
@@ -96,24 +98,55 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let chatRoomId = data.chatRoom;
     let userId = data.client;
 
-    socket.join(chatRoomId);
-
     let user = await this.userService.getUserByUserId(userId);
 
-    let resp = await this.messageService.addMessage();
+
+    let createMessageDto: CreateMessageDto = {
+      text: user.userName+" has joined",
+      client: userId,
+      chatRoom: chatRoomId,
+      type: 1
+    };
+
+    let joinOrLeaveChatRoomDto: JoinOrLeaveChatRoomDto = {
+      chatId: chatRoomId,
+      userId: userId
+    }
+    let respJoin = await this.chatRoomService.joinChatRoom(joinOrLeaveChatRoomDto);
+
+    let respMessage = await this.messageService.addMessage(createMessageDto);
+
+    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(chatRoomId);
+
+    socket.join(chatRoom.chatName);
+
+    
 
     let newJoinGroupDto: NewJoinGroupDto = {
       userName: user.userName,
-      joinedTime: new Date(), // To be edit *********************************************************************
+      joinedTime: respMessage.generatedMaps[0].createdTime,
     };
 
-    console.log(user.userName, 'has join', chatRoomId);
+    console.log(user.userName, 'has join', chatRoom.chatName);
 
     this.server.to(chatRoomId).emit('new-member', newJoinGroupDto);
   }
 
+  @SubscribeMessage('login')
+  async login(socket: Socket,{userName}: any){
+    let user = await this.userService.getUserByUserName(userName);
+    let chatRoom_User = await this.chatRoomService.getChatRoomByUserId(user.userId);
+
+    chatRoom_User.forEach(chatRoom => {
+      console.log(socket.id,chatRoom.chatName);
+      socket.join(chatRoom.chatName)
+    });
+    console.log(userName,"login");
+  }
+
   @SubscribeMessage('test')
-  async test() {
-    this.server.to('group111').emit('test2', 'hello');
+  async test(socket: Socket) {
+    console.log(socket.id);
+    this.server.to("dog").emit('test2', 'wanwan');
   }
 }

@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
 import { ChatroomService } from './chatroom.service';
 import { User } from 'src/entities/user.entity';
-import { CreateChatRoomDto, joinOrLeaveChatRoomDto } from './chatroom.dto';
+import { CreateChatRoomDto, JoinOrLeaveChatRoomDto } from './chatroom.dto';
 
 @Controller('chatroom')
 export class ChatroomController {
@@ -18,12 +18,12 @@ export class ChatroomController {
   }
 
   @Patch('/join')
-  async joinChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto) {
+  async joinChatRoom(@Body() joinChatRoomDto: JoinOrLeaveChatRoomDto) {
     return this.chatRoomService.joinChatRoom(joinChatRoomDto);
   }
 
   @Patch('/leave')
-  async leaveChatRoom(@Body() joinChatRoomDto: joinOrLeaveChatRoomDto) {
+  async leaveChatRoom(@Body() joinChatRoomDto: JoinOrLeaveChatRoomDto) {
     return this.chatRoomService.leaveChatRoom(joinChatRoomDto);
   }
 }

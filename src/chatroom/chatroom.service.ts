@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ChatRoom, ChatRoom_User } from 'src/entities/chatroom.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
-import { CreateChatRoomDto, joinOrLeaveChatRoomDto } from './chatroom.dto';
+import { CreateChatRoomDto, JoinOrLeaveChatRoomDto } from './chatroom.dto';
 
 @Injectable()
 export class ChatroomService {
@@ -66,11 +66,12 @@ export class ChatroomService {
     let resp2 = await this.chatRoom_UserRepository.insert({
       chatRoomId: resp.identifiers[0].chatRoomId,
       userId: createChatRoomDto.user,
+      chatName: createChatRoomDto.chatName
     });
     return resp;
   }
 
-  async joinChatRoom(joinChatRoomDto: joinOrLeaveChatRoomDto) {
+  async joinChatRoom(joinChatRoomDto: JoinOrLeaveChatRoomDto) {
     let chatId = joinChatRoomDto.chatId;
     let userId = joinChatRoomDto.userId;
     let chatRooms = await this.chatRoom_UserRepository.find({
@@ -81,15 +82,17 @@ export class ChatroomService {
       if (chatRoom.userId == userId) isAlreadyJoined = true;
     });
     if (!isAlreadyJoined) {
+      let chatRoom = await this.getChatRoombyChatRoomId(chatId);
       return this.chatRoom_UserRepository.insert({
         chatRoomId: chatId,
         userId: userId,
+        chatName: chatRoom.chatName
       });
     }
     throw new BadRequestException('Already joined this chat room');
   }
 
-  async leaveChatRoom(joinChatRoomDto: joinOrLeaveChatRoomDto) {
+  async leaveChatRoom(joinChatRoomDto: JoinOrLeaveChatRoomDto) {
     let chatId = joinChatRoomDto.chatId;
     let userId = joinChatRoomDto.userId;
     let chatRooms = await this.chatRoom_UserRepository.find({
@@ -110,5 +113,11 @@ export class ChatroomService {
 
   async getChatRoombyChatRoomId(chatRoomId: number): Promise<ChatRoom> {
     return this.chatRoomRepository.findOne(chatRoomId);
+  }
+
+  async getChatRoomByUserId(userId: number): Promise<ChatRoom_User[]> {
+    return this.chatRoom_UserRepository.find({
+      where: {userId: userId}
+    });
   }
 }
