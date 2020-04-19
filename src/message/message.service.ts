@@ -12,9 +12,11 @@ export class MessageService {
   ) {}
 
   async getMessageFromChatId(chatId: number): Promise<Message[]> {
-    return this.messageRepository.find({
-      where: { chatId: chatId },
+    let resp = await this.messageRepository.find({
+      where: { chatRoom: chatId },
     });
+    console.log(resp[0]);
+    return resp;
   }
 
   async addMessage(createMessageDto: CreateMessageDto) {

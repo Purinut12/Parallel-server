@@ -30,6 +30,7 @@ export class Message {
     type => ChatRoom,
     chatRoom => chatRoom.messages,
   )
+  @JoinColumn({ name: 'chatRoomId' })
   chatRoom: ChatRoom;
 
   @Column('integer') //0 for normal message and 1 for join message
