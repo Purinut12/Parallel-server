@@ -142,7 +142,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       chatRoom.chatName,
     );
 
-    this.server.to(chatRoomId).emit('new-member', newJoinGroupDto);
+    this.server.to(chatRoom.chatName).emit('new-member', newJoinGroupDto);
   }
 
   @SubscribeMessage('login')
