@@ -28,8 +28,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server;
   users = 0;
 
-  async handleConnection() {
-    console.log('New User');
+  async handleConnection(socket: Socket) {
+    console.log('[New User] :\t', socket.id);
     // A client has connected
     this.users++;
 
@@ -37,8 +37,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit('users', this.users);
   }
 
-  async handleDisconnect() {
-    console.log('User disconnected');
+  async handleDisconnect(socket: Socket) {
+    console.log('[User disconnected]: \t', socket.id);
 
     // A client has disconnected
     this.users--;
@@ -48,10 +48,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('sent-message')
-  async onChat(client: Socket, data: any) {
+  async onChat(socket: Socket, data: any) {
     let message = data.text;
     let userId = data.client;
     let chatRoomId = data.chatRoom;
+    console.log('[Message] :\t', message, 'sent from', socket.id);
 
     let createMessageDto: CreateMessageDto = {
       text: message,
@@ -95,6 +96,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       chatRoom: resp.identifiers[0].chatRoomId,
       member: [userId],
     };
+    console.log('[Create group]:\t', chatName);
     this.server.emit('new-group', newGroupDto);
   }
 
@@ -133,7 +135,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       joinedTime: respMessage.generatedMaps[0].createdTime,
     };
 
-    console.log(user.userName, 'has join', chatRoom.chatName);
+    console.log(
+      '[Join group] :\t',
+      user.userName,
+      'has join',
+      chatRoom.chatName,
+    );
 
     this.server.to(chatRoomId).emit('new-member', newJoinGroupDto);
   }
@@ -149,7 +156,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log(socket.id, chatRoom.chatName);
       socket.join(chatRoom.chatName);
     });
-    console.log(userName, 'login');
+    console.log('[Login] :\t', userName, socket.id);
   }
 
   @SubscribeMessage('test')
