@@ -5,4 +5,5 @@ export class CreateMessageDto {
   chatRoom: any;
   type: number;
   senderName?: string;
+  clientId?: number;
 }

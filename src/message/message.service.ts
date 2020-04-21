@@ -22,6 +22,7 @@ export class MessageService {
 
   async addMessage(createMessageDto: CreateMessageDto) {
     createMessageDto.createdTime = new Date();
+    createMessageDto.clientId = createMessageDto.client;
 
     if (!createMessageDto.senderName) {
       let user = await this.userService.getUserByUserId(
