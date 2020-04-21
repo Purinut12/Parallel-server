@@ -4,4 +4,5 @@ export class CreateMessageDto {
   createdTime?: Date;
   chatRoom: any;
   type: number;
+  senderName?: string;
 }

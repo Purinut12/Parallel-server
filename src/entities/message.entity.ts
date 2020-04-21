@@ -35,4 +35,7 @@ export class Message {
 
   @Column('integer') //0 for normal message and 1 for join message
   type: number;
+
+  @Column('varchar', { length: 50 })
+  senderName: string;
 }

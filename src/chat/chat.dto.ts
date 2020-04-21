@@ -14,3 +14,8 @@ export class NewJoinGroupDto {
   userName: string;
   joinedTime: Date;
 }
+
+export class LeftMemberDto {
+  userName: string;
+  leftTime: Date;
+}
