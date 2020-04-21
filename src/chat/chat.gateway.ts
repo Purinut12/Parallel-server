@@ -76,6 +76,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       text: message,
       createdTime: resp.generatedMaps[0].createdTime,
       userName: user.userName,
+      chatRoom: chatRoomId,
     };
     this.server.to(chatRoom.chatName).emit('new-message', newMessageDto);
   }
@@ -138,6 +139,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let newJoinGroupDto: NewJoinGroupDto = {
       userName: user.userName,
       joinedTime: respMessage.generatedMaps[0].createdTime,
+      chatRoom: chatRoomId,
     };
 
     console.log(
@@ -194,6 +196,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let leftMemberDto: LeftMemberDto = {
       userName: user.userName,
       leftTime: respMessage.generatedMaps[0].createdTime,
+      chatRoom: chatRoomId,
     };
 
     console.log(
