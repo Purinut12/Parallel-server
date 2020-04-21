@@ -23,6 +23,9 @@ export class Message {
   @JoinColumn({ name: 'clientId' })
   client: User;
 
+  @Column('integer')
+  clientId: number;
+
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   createdTime: Date;
 

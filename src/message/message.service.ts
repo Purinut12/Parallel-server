@@ -34,4 +34,22 @@ export class MessageService {
 
     return this.messageRepository.insert(createMessageDto);
   }
+
+  async getMessage(): Promise<Message[]> {
+    return this.messageRepository.find();
+  }
+
+  //For add new attribute(senderName)
+  async test() {
+    let messages = await this.getMessage();
+    messages.forEach(async message => {
+      let user = await this.userService.getUserByUserId(message.clientId);
+      let editMessage = {
+        messageId: message.messageId,
+        senderName: user.userName,
+      };
+      this.messageRepository.save(editMessage);
+    });
+    return 'OK';
+  }
 }
