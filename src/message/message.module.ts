@@ -7,9 +7,9 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Message,User])],
+  imports: [TypeOrmModule.forFeature([Message, User])],
   controllers: [MessageController],
-  providers: [MessageService,UserService],
+  providers: [MessageService, UserService],
   exports: [MessageService],
 })
 export class MessageModule {}

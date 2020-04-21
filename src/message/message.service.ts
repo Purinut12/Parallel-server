@@ -10,7 +10,7 @@ export class MessageService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   async getMessageFromChatId(chatId: number): Promise<Message[]> {
@@ -23,8 +23,10 @@ export class MessageService {
   async addMessage(createMessageDto: CreateMessageDto) {
     createMessageDto.createdTime = new Date();
 
-    if(!createMessageDto.senderName) {
-      let user = await this.userService.getUserByUserId(createMessageDto.client);
+    if (!createMessageDto.senderName) {
+      let user = await this.userService.getUserByUserId(
+        createMessageDto.client,
+      );
       createMessageDto.senderName = user.userName;
     }
 

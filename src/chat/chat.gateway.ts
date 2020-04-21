@@ -8,7 +8,12 @@ import {
 import { Socket } from 'socket.io';
 import { MessageService } from 'src/message/message.service';
 import { CreateMessageDto } from 'src/message/message.dto';
-import { NewMessageDto, NewGroupDto, NewJoinGroupDto, LeftMemberDto } from './chat.dto';
+import {
+  NewMessageDto,
+  NewGroupDto,
+  NewJoinGroupDto,
+  LeftMemberDto,
+} from './chat.dto';
 import { UserService } from 'src/user/user.service';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import {
@@ -59,7 +64,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client: userId,
       chatRoom: chatRoomId,
       type: 0,
-      senderName: user.userName 
+      senderName: user.userName,
     };
     let resp = await this.messageService.addMessage(createMessageDto);
 
@@ -111,7 +116,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client: userId,
       chatRoom: chatRoomId,
       type: 1,
-      senderName: user.userName
+      senderName: user.userName,
     };
 
     let joinOrLeaveChatRoomDto: JoinOrLeaveChatRoomDto = {
@@ -160,14 +165,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('leave-group')
-  async leaveGroup(socket:Socket, data: any) {
+  async leaveGroup(socket: Socket, data: any) {
     let chatRoomId = data.chatRoom;
     let userId = data.client;
 
     let joinOrLeaveChatRoomDto: JoinOrLeaveChatRoomDto = {
       chatId: chatRoomId,
-      userId: userId
-    }
+      userId: userId,
+    };
     let resp = await this.chatRoomService.leaveChatRoom(joinOrLeaveChatRoomDto);
     console.log(resp);
 
@@ -177,8 +182,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       text: user.userName + ' has left',
       type: 1,
       client: userId,
-      senderName: user.userName
-    }
+      senderName: user.userName,
+    };
 
     let respMessage = await this.messageService.addMessage(createMessageDto);
 
