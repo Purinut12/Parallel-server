@@ -210,9 +210,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.leave(chatRoom.chatName);
   }
 
-  @SubscribeMessage('test')
-  async test(socket: Socket) {
-    console.log(socket.id);
-    this.server.to('dog').emit('test2', 'wanwan');
+  @SubscribeMessage('change-room-front')
+  async changeRoom(socket: Socket, data: any) {
+    socket.emit('change-room-back', data);
+    console.log('[Change room] :\t', socket.id);
   }
+
+  /*
+  @SubscribeMessage('test')
+  async test(socket: Socket,data: any) {
+    console.log('test');
+    this.server.emit('test2', 'wanwan');
+  }
+
+  @SubscribeMessage('test2')
+  async test2(socket: Socket,data: any) {
+    console.log('test2');
+  }
+  */
 }
