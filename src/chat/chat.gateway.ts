@@ -21,7 +21,7 @@ import {
   JoinOrLeaveChatRoomDto,
 } from 'src/chatroom/chatroom.dto';
 
-@WebSocketGateway(10001)
+@WebSocketGateway(10002)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly messageService: MessageService,
@@ -39,6 +39,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Notify connected clients of current users
     this.server.emit('users', this.users);
+    socket.emit('please-login', {});
   }
 
   async handleDisconnect(socket: Socket) {
