@@ -21,7 +21,7 @@ import {
   JoinOrLeaveChatRoomDto,
 } from 'src/chatroom/chatroom.dto';
 
-@WebSocketGateway(10002)
+@WebSocketGateway(10001)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly messageService: MessageService,
@@ -177,7 +177,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       userId: userId,
     };
     let resp = await this.chatRoomService.leaveChatRoom(joinOrLeaveChatRoomDto);
-    console.log(resp);
+    //console.log(resp);
 
     let user = await this.userService.getUserByUserId(userId);
     let createMessageDto: CreateMessageDto = {
@@ -213,6 +213,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('change-room-front')
   async changeRoom(socket: Socket, data: any) {
+    let chatRoomId = data.chatRoom;
+    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(
+      chatRoomId,
+    );
+
+    data.chatName = chatRoom.chatName;
+
     socket.emit('change-room-back', data);
     console.log('[Change room] :\t', socket.id);
   }
