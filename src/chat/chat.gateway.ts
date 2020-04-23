@@ -214,11 +214,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('change-room-front')
   async changeRoom(socket: Socket, data: any) {
     let chatRoomId = data.chatRoom;
-    let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(
-      chatRoomId,
-    );
-
-    data.chatName = chatRoom.chatName;
+    if(chatRoomId == 0){
+      data.chatName = '';
+    }
+    else{
+      let chatRoom = await this.chatRoomService.getChatRoombyChatRoomId(
+        chatRoomId,
+      );
+      data.chatName = chatRoom.chatName;
+    }
 
     socket.emit('change-room-back', data);
     console.log('[Change room] :\t', socket.id);
