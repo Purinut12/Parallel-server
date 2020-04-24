@@ -26,4 +26,12 @@ export class ChatroomController {
   async leaveChatRoom(@Body() joinChatRoomDto: JoinOrLeaveChatRoomDto) {
     return this.chatRoomService.leaveChatRoom(joinChatRoomDto);
   }
+
+  @Patch('/read/:chatRoomId/:userId')
+  async readChatRoom(
+    @Param('chatRoomId') chatRoomId: number,
+    @Param('userId') userId: number,
+  ) {
+    return this.chatRoomService.readChatRoom(chatRoomId, userId);
+  }
 }
