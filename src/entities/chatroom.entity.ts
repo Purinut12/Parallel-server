@@ -8,6 +8,7 @@ import {
   OneToOne,
   JoinColumn,
   PrimaryColumn,
+  Unique,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Message } from './message.entity';
@@ -28,21 +29,28 @@ export class ChatRoom {
 }
 
 @Entity()
+@Unique(["chatRoomId", "userId"])
 export class ChatRoom_User {
-  /*
-    @OneToOne(type => ChatRoom, { primary: true, cascade: true, eager: true })
-    @JoinColumn({ name: "ChatRoomId" })
-    */
-  @PrimaryColumn('integer')
-  chatRoomId: number;
 
-  /*
-    @OneToOne(type => User, { primary: true, cascade: true })
-    @JoinColumn({ name: "UserId" })
-    */
-  @PrimaryColumn('integer')
-  userId: number;
+  // @PrimaryColumn('number')
+  // chatRoomId: number;
+
+  // @PrimaryColumn('number')
+  // userId: number;
 
   @Column('varchar', { length: 50 })
   chatName: string;
+
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  lastReadTime: Date;
+
+  @OneToOne(type => ChatRoom, chatRoom => chatRoom.chatRoomId, { primary: true })
+  @PrimaryColumn()
+  //@JoinColumn({ name: "chatRoomId" })
+  chatRoomId: number;
+
+  @OneToOne(type => User, user => user.userId, { primary: true })
+  @PrimaryColumn()
+  //@JoinColumn({ name: "userId" })
+  userId: number;
 }
