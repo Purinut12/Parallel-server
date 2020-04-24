@@ -11,6 +11,11 @@ export class MessageController {
     return this.messageService.getMessageFromChatId(chatId);
   }
 
+  @Get(':chatRoomId/:userId')
+  async getUnreadMessage(@Param('chatRoomId') chatRoomId: number, @Param('userId') userId: number){
+    return this.messageService.getUnreadMessage(chatRoomId,userId);
+  }
+
   @Post()
   async addMessage(@Body() createMessageDto: CreateMessageDto) {
     return this.messageService.addMessage(createMessageDto);

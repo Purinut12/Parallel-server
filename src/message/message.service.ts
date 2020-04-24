@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from '../entities/message.entity';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { CreateMessageDto } from './message.dto';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
+import { ChatRoom_User } from '../entities/chatroom.entity';
+import { ChatroomService } from '../chatroom/chatroom.service';
 
 @Injectable()
 export class MessageService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
+
+    @InjectRepository(ChatRoom_User)
+    private readonly chatRoom_UserRepository: Repository<ChatRoom_User>,
     private readonly userService: UserService,
   ) {}
 
@@ -18,6 +23,11 @@ export class MessageService {
       where: { chatRoom: chatId },
     });
     return resp;
+  }
+
+  async getUnreadMessage(chatRoomId: number, userId: number): Promise<Message[]>{
+    let chatRoom_User = await this.chatRoom_UserRepository.findOne({where:{chatRoomId,userId}})
+    return this.messageRepository.find({ where: { chatRoom: chatRoomId, createdTime: MoreThan(chatRoom_User.lastReadTime)} })
   }
 
   async addMessage(createMessageDto: CreateMessageDto) {
