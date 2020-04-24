@@ -29,9 +29,8 @@ export class ChatRoom {
 }
 
 @Entity()
-@Unique(["chatRoomId", "userId"])
+@Unique(['chatRoomId', 'userId'])
 export class ChatRoom_User {
-
   // @PrimaryColumn('number')
   // chatRoomId: number;
 
@@ -44,12 +43,20 @@ export class ChatRoom_User {
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   lastReadTime: Date;
 
-  @OneToOne(type => ChatRoom, chatRoom => chatRoom.chatRoomId, { primary: true })
+  @OneToOne(
+    type => ChatRoom,
+    chatRoom => chatRoom.chatRoomId,
+    { primary: true },
+  )
   @PrimaryColumn()
   //@JoinColumn({ name: "chatRoomId" })
   chatRoomId: number;
 
-  @OneToOne(type => User, user => user.userId, { primary: true })
+  @OneToOne(
+    type => User,
+    user => user.userId,
+    { primary: true },
+  )
   @PrimaryColumn()
   //@JoinColumn({ name: "userId" })
   userId: number;

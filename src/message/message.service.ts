@@ -25,9 +25,19 @@ export class MessageService {
     return resp;
   }
 
-  async getUnreadMessage(chatRoomId: number, userId: number): Promise<Message[]>{
-    let chatRoom_User = await this.chatRoom_UserRepository.findOne({where:{chatRoomId,userId}})
-    return this.messageRepository.find({ where: { chatRoom: chatRoomId, createdTime: MoreThan(chatRoom_User.lastReadTime)} })
+  async getUnreadMessage(
+    chatRoomId: number,
+    userId: number,
+  ): Promise<Message[]> {
+    let chatRoom_User = await this.chatRoom_UserRepository.findOne({
+      where: { chatRoomId, userId },
+    });
+    return this.messageRepository.find({
+      where: {
+        chatRoom: chatRoomId,
+        createdTime: MoreThan(chatRoom_User.lastReadTime),
+      },
+    });
   }
 
   async addMessage(createMessageDto: CreateMessageDto) {

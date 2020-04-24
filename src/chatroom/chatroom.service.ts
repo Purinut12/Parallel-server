@@ -132,8 +132,11 @@ export class ChatroomService {
     });
   }
 
-  async readChatRoom(chatRoomId: number, userId: number){
+  async readChatRoom(chatRoomId: number, userId: number) {
     let currentTime = new Date();
-    return this.chatRoom_UserRepository.update({chatRoomId, userId}, { lastReadTime: currentTime })
+    return this.chatRoom_UserRepository.update(
+      { chatRoomId, userId },
+      { lastReadTime: currentTime },
+    );
   }
 }

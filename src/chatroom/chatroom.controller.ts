@@ -28,7 +28,10 @@ export class ChatroomController {
   }
 
   @Patch('/read/:chatRoomId/:userId')
-  async readChatRoom(@Param('chatRoomId') chatRoomId: number, @Param('userId') userId: number){
-    return this.chatRoomService.readChatRoom(chatRoomId,userId);
+  async readChatRoom(
+    @Param('chatRoomId') chatRoomId: number,
+    @Param('userId') userId: number,
+  ) {
+    return this.chatRoomService.readChatRoom(chatRoomId, userId);
   }
 }
