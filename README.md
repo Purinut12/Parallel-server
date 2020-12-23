@@ -74,3 +74,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
   Nest is [MIT licensed](LICENSE).
 # Parallel-server
+
+This is part of a term project for Parallel Dist Sys (2019/2) of Chulalongkorn University.
